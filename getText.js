@@ -41,7 +41,9 @@ function startGetText(){
         // if(url.match('funlaile')){
         //     _categoryName = '神吐槽'
         // }
-
+        if(!_categoryName){
+            return;
+        }
 
 
         // step 1 采集分类名字
