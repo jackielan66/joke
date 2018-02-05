@@ -1,0 +1,138 @@
+{%  extends 'layout.html' %}
+
+{%  block content %}
+    <div>
+        <ol class="breadcrumb">
+            <li><a href="/admin">管理首页</a></li>
+            <li><span>内容列表</span></li>
+        </ol>
+        <h3>博客内容列表</h3>
+
+        <table class="table table-hover table-bordered">
+            <tr>
+                <!--<th>ID</th>-->
+                <th>内容标题</th>
+                <th>内容分类</th>
+                <!--<th>内容简介</th>-->
+                <!--<th>作者</th>-->
+                <th>发布时间</th>
+                <th>点击次数</th>
+                <th>操作</th>
+            </tr>
+            {% for content in contents  %}
+                <tr>
+                    <!--<td>{{content.id}}</td>-->
+                    <td>{{content.title}}</td>
+                    <td>{{content.category.name}}</td>
+                    <!--<td>{{content.description}}</td>-->
+                    <!--<td>{{content.user.username}}</td>-->
+                    <td>{{content.createAt|date('Y年m月d日 h:i:s',-480, 'CCT')}}</td>
+                    <td>{{content.views}}</td>
+                    <td><a href="content/edit?id={{content.id}}">修改</a> | <a href="##" class="delete-centent" data-id="{{content.id}}">删除</a></td>
+                </tr>
+            {% endfor%}
+        </table>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li><a href="content?page={{page-1}}">上一页</a></li>
+                <li>当前一共有 {{count}} 条数据</li>
+                <li><a href="content?page={{page-0+1}}">下一页</a></li>
+            </ul>
+        </nav>
+    </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改分类名称</h4>
+            </div>
+            <div class="modal-body">
+                <h3 id="categoryName"></h3>
+
+                <div class="form-group">
+                    <label for="text">修改名称</label>
+                    <input type="text" class="form-control" id="text" placeholder="请输入需要修改的分类名称">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="confirmEdit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.delete-centent').on('click',function(){
+        let contentId = $(this).data('id');
+        $.ajax({
+            url: "/api/content/delete",
+            type: "post",
+            data: {
+                id: contentId
+            },
+            dataType: "json",
+            success: function (rusult) {
+//                if (rusult.code == 200) {
+//                    window.location.href="/admin/category/";
+//                }
+            }
+        })
+    })
+
+
+
+    let options = {
+        title:'修改分类名称',
+        trigger:'click',
+    }
+
+    $('.edit-category').on('click',function(){
+        let categoryId = $(this).data('id');
+        let categoryName = $(this).data('name');
+        $('#categoryName').html(categoryName);
+        $('#confirmEdit').on('click',()=>{
+            let _editCategoryName = $('#text').val().trim();
+            $.ajax({
+                url: "/api/category/edit",
+                type: "post",
+                data: {
+                    id: categoryId,
+                    name:_editCategoryName
+                },
+                dataType: "json",
+                success: function (rusult) {
+                    if (rusult.code == 200) {
+                        window.location.href="/admin/category/";
+                    }
+                }
+            })
+        })
+//                options.container = '#'
+//                options.content = function () {
+//                    return "<div>你的名字的是什么</div>"
+//                }
+//                $(this).popover(options);
+
+//            let categoryId = $(this).data('id');
+////            console.log(this,"window")
+////            console.log(categoryId,'categoryId')
+//            $.ajax({
+//                url: "/api/category/edit",
+//                type: "post",
+//                data: {
+//                    id: categoryId
+//                },
+//                dataType: "json",
+//                success: function (rusult) {
+//                    if (rusult.code == 200) {
+//                        window.location.href="/admin/category/";
+//                    }
+//                }
+//            })
+    })
+</script>
+{% endblock %}
+

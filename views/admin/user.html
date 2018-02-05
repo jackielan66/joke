@@ -1,0 +1,41 @@
+{%  extends 'layout.html' %}
+
+{%  block content %}
+    <div>
+        <ol class="breadcrumb">
+            <li><a href="/admin">管理首页</a></li>
+            <li><span>列表</span></li>
+        </ol>
+        <h3>用户列表</h3>
+        <table class="table table-hover">
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>密码</th>
+                <th>是否是管理员</th>
+            </tr>
+            {% for user in users  %}
+                <tr>
+                    <td>{{user._id}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.password}}</td>
+                    <td>
+                    {% if user.isAdmin %}
+                    管理员
+                    {% else %}
+                        用户
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor%}
+        </table>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li><a href="user?page={{page-1}}">上一页</a></li>
+                <li>当前一共有 {{totalPage}} 条数据</li>
+                <li><a href="user?page={{page-0+1}}">下一页</a></li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+

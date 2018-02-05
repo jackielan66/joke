@@ -1,0 +1,8 @@
+<div class="widget_posts">
+    <h4>本月热点内容</h4>
+    <ul>
+        {% for hotContent in hotContents %}
+        <li><a href="/content/{{ hotContent.id }}">{{hotContent.title}}</a></li>
+        {% endfor %}
+    </ul>
+</div>

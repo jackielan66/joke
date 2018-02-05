@@ -1,0 +1,16 @@
+<header class="header">
+    <div class="container">
+        <div class="logo pull-left">
+            <a href="/" title="我爱热可乐，轻松一刻">
+                <i class="fa"><img src="/public/images/logo.png" alt="我爱热可乐"></i>
+            </a>
+        </div>
+        <ul class="pull-right site-navbar site-nav2">
+            {% for item in categorys  %}
+                <li>
+                    <a href="/category/{{item.id}}">{{item.name}}</a>
+                </li>
+            {% endfor  %}
+        </ul>
+    </div>
+</header>
