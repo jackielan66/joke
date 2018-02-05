@@ -48,8 +48,15 @@ function startGetText(){
         Category.findOne({
             name:_categoryName
         }).then(category=>{
+            if(!category){
+                new Category({
+                    name:_categoryName
+                }).save();
+                return;
+            }
             _categoryId=category._id;
             if(!_categoryId){
+
                 return
             }
             // step 2 获取url文件体
