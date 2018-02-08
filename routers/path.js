@@ -76,11 +76,11 @@ router.get("/category/*",(req,res,next)=>{
         page=0;
     }
     let size = req.query.size||10;
-    Content.find({category:_categoryId}).sort({views:-1}).skip(page*size).limit(size).populate(['category']).then(lists=>{
+    Content.find({category:_categoryId}).sort({_id:-1}).skip(page*size).limit(size).populate(['category']).then(lists=>{
         if(page*size>lists.length){
             page = parseInt(lists.length/page/size) + 1;
         }
-        Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
+        Content.find({}).sort({_id:-1}).limit(limitVal).then(hotContents=>{
             res.render("font/list.html",{
                 title:"分页",
                 lists,
