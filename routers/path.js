@@ -80,17 +80,24 @@ router.get("/category/*",(req,res,next)=>{
         if(page*size>lists.length){
             page = parseInt(lists.length/page/size) + 1;
         }
-        Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
-            res.render("font/list.html",{
-                title:"分页",
-                lists,
-                page,
-                size,
-                hotContents,
-                _categoryId,
-                categorys:req.categorys
+        Category.findOne({
+            _id:_categoryId
+        }).then(i=>{
+            Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
+                // console.log(i,'iii')
+                res.render("font/list.html",{
+                    title:`${i.name}`,
+                    lists,
+                    page,
+                    size,
+                    hotContents,
+                    _categoryId,
+                    categorys:req.categorys,
+
+                })
             })
         })
+
     })
 
     // let _prevId = "";

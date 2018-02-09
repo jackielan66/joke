@@ -13,6 +13,12 @@
 <body>
     {% include "header.html" %}
     <section class="container mt-20">
+        <ol class="breadcrumb">
+            当前位置：
+            <li><a href="/">首页</a></li>
+            <li><a href="/category/{{content.category.id}}"> {{content.category.name}} </a> </li>
+            <li>内容详情</li>
+        </ol>
         <div class="row">
             <div class="col-lg-8">
                 <div class="content">
