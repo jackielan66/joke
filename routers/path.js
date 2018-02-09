@@ -80,7 +80,7 @@ router.get("/category/*",(req,res,next)=>{
         if(page*size>lists.length){
             page = parseInt(lists.length/page/size) + 1;
         }
-        Content.find({}).sort({_id:-1}).limit(limitVal).then(hotContents=>{
+        Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
             res.render("font/list.html",{
                 title:"分页",
                 lists,

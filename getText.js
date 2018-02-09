@@ -16,7 +16,8 @@ let urlList = [
     'http://www.52rkl.cn/neihantu/',
     'http://www.52rkl.cn/qingsong/',
     'http://www.52rkl.cn/shentucao/',
-    'http://www.52rkl.cn/funlaile/'
+    'http://www.52rkl.cn/funlaile/',
+    'http://www.52rkl.cn/doumei/',
 ]
 
 /**
@@ -38,9 +39,12 @@ function startGetText(){
         if(url.match('shentucao')){
             _categoryName = '神吐槽'
         }
-        // if(url.match('funlaile')){
-        //     _categoryName = '神吐槽'
-        // }
+        if(url.match('doumei')){
+            _categoryName = '逗妹吐槽'
+        }
+        if(url.match('funlaile')){
+            _categoryName = 'FUN来了'
+        }
         if(!_categoryName){
             return;
         }

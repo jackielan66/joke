@@ -137,3 +137,40 @@ img{
     top: 80%;
     font-size: 30px;
 }
+
+@media (max-width: 400px){
+    .excerpt .focus {
+        width: 90px;
+        margin-left: -100px;
+    }
+    .excerpt .thumb {
+        width: 90px;
+        height: 61px;
+    }
+    .excerpt {
+        padding: 15px 15px 15px 115px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px){
+    .container{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .excerpt {
+        padding: 15px 15px 15px 145px;
+    }
+    .excerpt .focus {
+        width: 120px;
+        margin-left: -130px;
+    }
+    .excerpt .thumb {
+        width: 120px;
+        height: 82px;
+    }
+    .excerpt h2 {
+        font-size: 14px;
+        line-height: 18px;
+    }
+}
