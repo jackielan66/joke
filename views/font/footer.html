@@ -1,0 +1,21 @@
+<div>
+    <span class="go-top glyphicon glyphicon-upload" style="display: none"></span>
+</div>
+<script>
+    $('.go-top').on('click',()=>{
+        $('html,body').animate({scrollTop: 0}, 1000);
+    });
+    $(window).scroll((e)=>{
+//        console.log($(window).scrollTop(),"scrollTop");
+        let clientHeight = window.innerHeight || 0;
+        let scrollTop = $(window).scrollTop() || 0;
+        if(scrollTop>clientHeight){
+            $('.go-top').fadeIn();
+        }else{
+            $('.go-top').fadeOut();
+        }
+//        console.log(window.innerHeight,"innerHeight");
+    })
+    <!--window.scroll-->
+    <!--console.log(window.scroll,"window.scroll")-->
+</script>

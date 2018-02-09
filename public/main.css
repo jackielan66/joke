@@ -106,7 +106,7 @@ img{
 
 .hot_posts, .widget_posts {
     clear: both;
-    width: 336px;
+    /*width: 336px;*/
     font-size: 14px;
     padding: 10px;
     background: #fff;
@@ -129,4 +129,11 @@ img{
 }
 .site-navbar a {
     display: block;
+}
+
+.go-top{
+    position: fixed;
+    right: 5%;
+    top: 80%;
+    font-size: 30px;
 }

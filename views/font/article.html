@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
@@ -15,7 +14,7 @@
     {% include "header.html" %}
     <section class="container mt-20">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-lg-8">
                 <div class="content">
                     <article class="article-content panel">
                         <header class="article-header">
@@ -32,11 +31,14 @@
                     </article>
                 </div>
             </div>
-            <aside class="col-sm-4">
+            <aside class="col-lg-4 ">
                 {% include "aside.html"  %}
             </aside>
         </div>
     </section>
+    <footer>
+        {% include "footer.html"  %}
+    </footer>
 </body>
 
 </html>
