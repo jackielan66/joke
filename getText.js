@@ -18,7 +18,8 @@ let urlList = [
     'http://www.52rkl.cn/shentucao/',
     'http://www.52rkl.cn/funlaile/',
     'http://www.52rkl.cn/funlaile/',
-    'http://www.52rkl.cn/huzhou/'
+    'http://www.52rkl.cn/huzhou/',
+    'http://www.52rkl.cn/jiongge/'
     // 'http://www.52rkl.cn/doumei/',
 ]
 
@@ -49,6 +50,9 @@ function startGetText(){
         }
         if(url.match('/huzhou')){
             _categoryName = '狐诌冷笑话'
+        }
+        if(url.match('/jiongge')){
+            _categoryName = '囧哥说事'
         }
 
         if(!_categoryName){
