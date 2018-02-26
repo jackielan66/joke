@@ -93,11 +93,18 @@ app.use('/api', require('./routers/api.js'));
 app.use('/app/api', require('./routers/appapi.js'));
 app.use('/', require('./routers/path.js'));
 
+let arguments = process.argv.splice(1);
+let port = 9000;
+if(arguments.length>=2){
+    port=80;
+}
+// console.log(arguments,"arguments")
+
 mongoose.connect("mongodb://localhost:27017/joke", err=>{
     if(err){
         console.log("启动失败");
     }else{
-        app.listen(9000);
-        console.log("服务启动成功");
+        app.listen(port);
+        console.log("服务启动成功,port是",port);
     }
 });
