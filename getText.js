@@ -23,6 +23,13 @@ let urlList = [
     // 'http://www.52rkl.cn/doumei/',
 ]
 
+
+const startCollect = function () {
+    setInterval(()=>{
+        startGetText();
+    },1000*60*60*8)
+}
+
 /**
  * 开始采集
  */
@@ -193,4 +200,4 @@ function getBody(list,_categoryId) {
 
 
     
-module.exports = startGetText;
+module.exports = startCollect;
