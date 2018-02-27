@@ -29,7 +29,7 @@ const startCollect = function () {
     startGetText();
     setInterval(()=>{
         startGetText();
-    },1000*60*60*8)
+    },1000*60*60)
 }
 
 /**
