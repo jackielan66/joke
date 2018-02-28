@@ -36,6 +36,7 @@ const startCollect = function () {
  * 开始采集
  */
 function startGetText(){
+    console.log('111')
     urlList.forEach(url=>{
         let _categoryId = "";
         let _categoryName =  "";
@@ -177,6 +178,7 @@ function getBody(list,_categoryId) {
                     closest('.article-container .article-content').
                     find('#ns,#nx,#nz').remove().end().closest('.article-container .article-content').
                     html();
+                    content.createAt = new Date()
                     // content.content = $(contentHtml).html();
                     //  $('.article-container .article-content').remove('div#ns');
                     // console.log(
