@@ -20,7 +20,7 @@
                     <article class="excerpt">
                         <a href="/content/{{ content.id }}" class="focus"><img src="/public/images/thumb.png" class="thumb"></a>
                         <h2><a href="/content/{{ content.id }}">{{content.title}}</a></h2>
-                        <time>{{content.createAt|date('Y年m月d日 h:i:s',-480, 'CCT')}}</time><a class="cat" href="/category/{{ content.category.id }}">{{content.category.name}}</a>
+                        <time>{{content.createAt|date('Y年m月d日 hh:i:s',-480, 'CCT')}}</time><a class="cat" href="/category/{{ content.category.id }}">{{content.category.name}}</a>
                         <p class="note">
                             <a href="/content/{{ content.id }}">
                                 <!--{% autoescape  %} {{content.content}} {% endautoescape  %}-->
