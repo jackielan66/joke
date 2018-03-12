@@ -20,7 +20,8 @@ let urlList = [
     'http://www.52rkl.cn/funlaile/',
     'http://www.52rkl.cn/huzhou/',
     'http://www.52rkl.cn/jiongge/',
-    'http://www.52rkl.cn/zhizhe/'
+    'http://www.52rkl.cn/zhizhe/',
+    'http://www.52rkl.cn/shenjing/'
     // 'http://www.52rkl.cn/doumei/',
 ]
 
@@ -29,7 +30,7 @@ const startCollect = function () {
     startGetText();
     setInterval(()=>{
         startGetText();
-    },1000*60*60)
+    },1000*60*60*5)
 }
 
 /**
@@ -66,6 +67,9 @@ function startGetText(){
         }
         if(url.match('/zhizhe')){
             _categoryName = '智者贱志'
+        }
+        if(url.match('/shenjing')){
+            _categoryName = '我们都是深井冰 '
         }
 
         if(!_categoryName){
