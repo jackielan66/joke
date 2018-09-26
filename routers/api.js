@@ -4,7 +4,7 @@ var router = express.Router();
 var Content = require("../models/Content.js");
 var Category = require("../models/Category.js");
 var User = require("../models/User.js");
-
+const SysConfig = require('../models/SysConfig.js')
 
 // 用户登录api
 router.post("/login",(req,res,next)=>{
@@ -238,6 +238,20 @@ router.post("/content/delete",(req,res,next)=>{
 })
 
 
+/**
+ * 保存系统配置信息
+ */
+router.post('/config',(req,res,next)=>{
+    let body = req.body;
+    console.log(body,"body  ====  >>")
+    SysConfig.find({}).then(config=>{
+        console.log(config,"config")
+    })
+    res.json({
+        code:500,
+        message:"配置保存失败"
+    })
+})
 
 
 

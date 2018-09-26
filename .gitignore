@@ -1,0 +1,3 @@
+#ignore pull file#
+/node_modules/
+.idea

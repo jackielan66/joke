@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2017/11/14.
  * 后台登录模块
+ *  json 返回
  */
 var express = require('express');
 var router = express.Router();
@@ -8,14 +9,14 @@ var User = require("../models/User.js");
 var Category = require("../models/Category.js");
 var Content = require("../models/Content.js");
 
-router.use((req,res,next)=>{
-    if(!req.username){
-        // res.send("你还没登录！");
-        res.render('admin/login.html')
-        return;
-    };
-    next();
-})
+// router.use((req,res,next)=>{
+//     if(!req.username){
+//         // res.send("你还没登录！");
+//         res.render('admin/login.html')
+//         return;
+//     };
+//     next();
+// })
 // router.use(function (req,res,next) {
 //     if(!req.userInfo.isAdmin){
 //         res.send('对不起！只有管理员才能登录此页，');
@@ -30,34 +31,32 @@ router.get('/',function (req,res,next) {
     })
 });
 
-// 后台分类
-router.get("/category",(req,res,next)=>{
-    // console.log(req.query,'req');
-    let _query = req.query;
-    // console.log(_query,'_query')
-    let page = req.query.page || 0;
-    page = page<0?0:page;
-    let size = req.query.size || 10;
-    size = size<0?10:size;
-    let skipVal = page*size;
-    Category.count((err,count)=>{
-        // console.log(count,'count');
-        Category.find({}).skip(skipVal).then(categorys=>{
-            res.render("admin/category.html",{
-                categorys:categorys,
-                totalSize:count,
-                page,
-                size
-            })
-        })
-    })
-});
+// // 后台分类
+// router.get("/category",(req,res,next)=>{
+//     // console.log(req.query,'req');
+//     let _query = req.query;
+//     // console.log(_query,'_query')
+//     let page = req.query.page || 0;
+//     page = page<0?0:page;
+//     let size = req.query.size || 10;
+//     size = size<0?10:size;
+//     let skipVal = page*size;
+//     Category.count((err,count)=>{
+//         // console.log(count,'count');
+//         Category.find({}).skip(skipVal).then(categorys=>{
+//             res.render("admin/category.html",{
+//                 categorys:categorys,
+//                 totalSize:count,
+//                 page,
+//                 size
+//             })
+//         })
+//     })
+// });
 
-// 后台添加分类
-router.get("/category/add",(req,res,next)=>{
-    res.render("admin/category_add.html",{
-
-    })
+// 后台栏目
+router.post("/category/add",(req,res,next)=>{
+    let body = req.body;
 });
 
 
@@ -127,6 +126,17 @@ router.post("/content/edit",(req,res,next)=>{
         // })
     })
 });
+
+
+/**
+ * 系统配置路径
+ *
+ */
+router.get('/config',(req,res,next)=>{
+    res.render('admin/sys_config.html',{
+
+    })
+})
 
 
 

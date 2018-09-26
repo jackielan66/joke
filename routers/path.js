@@ -8,12 +8,12 @@ var Content = require("../models/Content.js");
 var Category = require("../models/Category.js");
 var User = require("../models/User.js");
 
-var skipVal =  0; // 跳过几页
+var skipVal = 0; // 跳过几页
 var limitVal = 10; // 每页显示几个
 
 // 登录路径
-router.get("/login",(req,res,next)=>{
-    res.render("admin/login.html",{
+router.get("/login", (req, res, next) => {
+    res.render("admin/login.html", {
 
     })
     // if(req.cookies.get("username")){
@@ -32,13 +32,13 @@ router.get("/login",(req,res,next)=>{
 
 
 // 首页路径
-router.get("/",(req,res,next)=>{
-    Content.find().sort({_id:-1}).skip(skipVal).limit(limitVal).populate(['category']).then(contents=>{
-        Content.find().sort({views:-1}).limit(limitVal).then(hotContents=>{
-            res.render("font/index.html",{
-                contents:contents,
-                hotContents:hotContents,
-                categorys:req.categorys
+router.get("/", (req, res, next) => {
+    Content.find().sort({ _id: -1 }).skip(skipVal).limit(limitVal).populate(['category']).then(contents => {
+        Content.find().sort({ views: -1 }).limit(limitVal).then(hotContents => {
+            res.render("font/index.html", {
+                contents: contents,
+                hotContents: hotContents,
+                categorys: req.categorys
             })
         })
 
@@ -46,59 +46,65 @@ router.get("/",(req,res,next)=>{
 });
 
 // 前台显示某一篇具体文章
-router.get("/content/*",(req,res,next)=>{
+router.get("/content/*", (req, res, next) => {
     let _contentId = req.params['0'];
     let _prevId = "";
     let _nextId = "";
-    Content.findOne({_id:_contentId}).populate(['category']).then(content=>{
-        Content.update({_id:_contentId},{views:content.views+1}).then(newcontent=>{
-            // Content.find({_id:_contentId}).then(search=>{
-            //     console.log('-------',search)
-            // })
-            Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
-                res.render("font/article.html",{
+    Content.findOne({ _id: _contentId }).populate(['category']).then(content => {
+        Content.update({ _id: _contentId }, { '$inc': { views: 1 } }).then(newcontent => {
+            Content.find({}).sort({ views: -1 }).limit(limitVal).then(hotContents => {
+                res.render("font/article.html", {
                     hotContents,
-                    content:content,
-                    title:content.title,
-                    categorys:req.categorys
+                    content: content,
+                    title: content.title,
+                    categorys: req.categorys
                 });
             })
         });
+    }, notFound => {
+        res.status(404).render('404.html', {
+            title: 'No Found'
+        })
     })
 });
 
 
 // 前台显示某一分类内容列表
-router.get("/category/*",(req,res,next)=>{
-    let _categoryId = req.params['0'];
-    let page = req.query.page || 0;
-    if(page<0){
-        page=0;
-    }
-    let size = req.query.size||10;
-    Content.find({category:_categoryId}).sort({_id:-1}).skip(page*size).limit(size).populate(['category']).then(lists=>{
-        if(page*size>lists.length){
-            page = parseInt(lists.length/page/size) + 1;
-        }
-        Category.findOne({
-            _id:_categoryId
-        }).then(i=>{
-            Content.find({}).sort({views:-1}).limit(limitVal).then(hotContents=>{
-                // console.log(i,'iii')
-                res.render("font/list.html",{
-                    title:`${i.name}`,
-                    lists,
-                    page,
-                    size,
-                    hotContents,
-                    _categoryId,
-                    categorys:req.categorys,
+router.get("/category/:id/:page", (req, res, next) => {
 
+    let _categoryId = req.params.id;
+    let page = req.params.page || 0;
+    if (page < 0) {
+        page = 0;
+    }
+    let size = req.query.size || 10;
+    Content.find({ category: _categoryId }).sort({ _id: -1 }).skip(page * size).limit(size).populate(['category']).then(
+        lists => {
+            if (page * size > lists.length) {
+                page = parseInt(lists.length / page / size) + 1;
+            }
+            Category.findOne({
+                _id: _categoryId
+            }).then(i => {
+                Content.find({}).sort({ views: -1 }).limit(limitVal).then(hotContents => {
+                    // console.log(i,'iii')
+                    res.render("font/list.html", {
+                        title: `${i.name}`,
+                        lists,
+                        page,
+                        size,
+                        hotContents,
+                        _categoryId,
+                        categorys: req.categorys,
+                    })
                 })
             })
-        })
 
-    })
+        }, notFound => {
+            res.status(404).render('404.html', {
+                title: 'No Found'
+            })
+        })
 
     // let _prevId = "";
     // let _nextId = "";
@@ -117,5 +123,7 @@ router.get("/category/*",(req,res,next)=>{
     //     });
     // })
 });
+
+
 
 module.exports = router;
