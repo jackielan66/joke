@@ -63,9 +63,9 @@ app.get('*', function (req, res) {
     })
 });
 
-let arguments = process.argv.splice(1);
+
 let port = 9000;
-if (arguments.length >= 2) {
+if (process.env.NODE_ENV == 'prodution' ) {
     port = 80;
 }
 // console.log(arguments,"arguments")

@@ -13,6 +13,8 @@ const request = require("request");
 let urlList = [
     'http://m.sohu.com/media/117369', // 搜狐神吐槽
     'http://news.ifeng.com/listpage/70664/1/list.shtml', // FUN来了_资讯频道_凤凰网
+    'http://tu.duowan.com/tag/5037.html', // 今日囧图
+
     'http://kuaibao.qq.com/getMediaCardInfo?chlid=1033', // 新闻哥
     'http://www.52rkl.cn/qingsong/',
     'http://www.52rkl.cn/shentucao/',
@@ -25,12 +27,15 @@ let urlList = [
     // 'http://www.52rkl.cn/doumei/',
 ]
 
-
+let second = 5000;
+if (process.env.NODE_ENV == 'prodution') {
+    second = 6000 * 60 * 2
+}
 const startCollect = function () {
     startGetText();
     setInterval(() => {
         startGetText();
-    }, 5000)
+    }, second)
 }
 
 /**
@@ -47,10 +52,9 @@ function startGetText() {
         if (url.match('news.ifeng.com/listpage/70664/1/list.shtml')) {
             _categoryName = 'FUN来了'
         }
-        // if (url.match('kuaibao.qq.com/getMediaCardInfo')) {
-        //     // console.log('新闻哥')
-        //     _categoryName = '新闻哥'
-        // }
+        if (url.match('tu.duowan.com/tag/5037.html')) {
+            _categoryName = '今日囧图'
+        }
 
         // if(url.match('qingsong')){
         //     _categoryName = '轻松一刻'
@@ -84,8 +88,6 @@ function startGetText() {
         if (!_categoryName) {
             return;
         }
-
-
         // step 1 采集分类名字
         Category.findOne({
             name: _categoryName
@@ -224,6 +226,60 @@ function booksQuery(body, _categoryId, _categoryName) {
         })
     }
 
+    if (_categoryName == '今日囧图') {
+        $ = cheerio.load(body, { decodeEntities: false });
+        let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
+        let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
+
+        let getUrl = $(newlyDom).children('a').attr('href');
+        let urlArr = []
+        let id = 0;
+        if (getUrl.indexOf('.htm') > -1) {
+            urlArr = getUrl.split('.htm')
+        } else {
+            return
+        }
+        if (urlArr.length > 0) {
+            let str = urlArr[0];
+            id = str.split('/')[str.split('/').length - 1]
+        } else {
+            return
+        }
+        url = url + id
+        let content = {
+            thumb: $(newlyDom).children('a').find('img').attr('src')
+        };
+        request(url, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                let requestJSON = JSON.parse(body)
+                content.title = requestJSON.gallery_title;
+                content.keywords = content.title
+                content.description = content.title
+                content.category = _categoryId;
+                content.createAt = new Date();
+
+                let contentHtml = "";
+                if (Array.isArray(requestJSON.picInfo)) {
+                    requestJSON.picInfo.forEach(v => {
+                        contentHtml += `<p class="text-center"><img data-src='${v.source}' /></p><p class="text-center" >${v.add_intro}</p>`
+                    })
+                }
+                content.content = contentHtml;
+
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
+
     if (_categoryName == '新闻哥') {
         return;
         let bodyTojson = JSON.parse(body);
@@ -245,7 +301,7 @@ function booksQuery(body, _categoryId, _categoryName) {
                 content.content = $('#content .content-box').html();
                 content.category = _categoryId;
                 content.createAt = new Date();
-    
+
                 Content.findOne({ title: content.title }).then((isHasContent) => {
                     if (!isHasContent) {
                         (new Content(content)).save().then(content, err => {
