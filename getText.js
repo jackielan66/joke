@@ -35,7 +35,7 @@ const startCollect = function () {
     startGetText();
     setInterval(() => {
         startGetText();
-    }, second)
+    }, 6000 * 60 * 2)
 }
 
 /**
