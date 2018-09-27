@@ -261,7 +261,7 @@ function booksQuery(body, _categoryId, _categoryName) {
                 let contentHtml = "";
                 if (Array.isArray(requestJSON.picInfo)) {
                     requestJSON.picInfo.forEach(v => {
-                        contentHtml += `<p class="text-center"><img data-src='${v.source}' /></p><p class="text-center" >${v.add_intro}</p>`
+                        contentHtml += `<figure class="text-center"><img data-src='${v.source}' /><p class="text-center" >${v.add_intro}</p></figure>`
                     })
                 }
                 content.content = contentHtml;
