@@ -51,16 +51,22 @@ router.get("/content/*", (req, res, next) => {
     let _prevId = "";
     let _nextId = "";
     Content.findOne({ _id: _contentId }).populate(['category']).then(content => {
-        Content.update({ _id: _contentId }, { '$inc': { views: 1 } }).then(newcontent => {
-            Content.find({}).sort({ views: -1 }).limit(limitVal).then(hotContents => {
-                res.render("font/article.html", {
-                    hotContents,
-                    content: content,
-                    title: content.title,
-                    categorys: req.categorys
-                });
+        if(content){
+            Content.update({ _id: _contentId }, { '$inc': { views: 1 } }).then(newcontent => {
+                Content.find({}).sort({ views: -1 }).limit(limitVal).then(hotContents => {
+                    res.render("font/article.html", {
+                        hotContents,
+                        content: content,
+                        title: content.title,
+                        categorys: req.categorys
+                    });
+                })
+            });
+        }else{
+            res.status(404).render('404.html', {
+                title: 'No Found'
             })
-        });
+        }
     }, notFound => {
         res.status(404).render('404.html', {
             title: 'No Found'
