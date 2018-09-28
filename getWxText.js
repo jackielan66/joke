@@ -3,29 +3,16 @@ var router = express.Router();
 var Content = require("./models/Content.js");
 var Category = require("./models/Category.js");
 var _ = require('lodash');
-var moment = require('moment')
 
 /*
 *  采集接口
+*        微信公众号
 * */
 const cheerio = require("cheerio");
 const request = require("request");
 
 let urlList = [
-    'http://m.sohu.com/media/117369', // 搜狐神吐槽
-    'http://news.ifeng.com/listpage/70664/1/list.shtml', // FUN来了_资讯频道_凤凰网
-    'http://tu.duowan.com/tag/5037.html', // 今日囧图
-    'https://3g.163.com/touch/reconstruct/article/list/BD21K0DLwangning/0-10.html', // 轻松一刻
-
-    // 'http://www.52rkl.cn/qingsong/',
-    // 'http://www.52rkl.cn/shentucao/',
-    // 'http://www.52rkl.cn/funlaile/',
-    // 'http://www.52rkl.cn/funlaile/',
-    // 'http://www.52rkl.cn/huzhou/',
-    // 'http://www.52rkl.cn/jiongge/',
-    // 'http://www.52rkl.cn/zhizhe/',
-    // 'http://www.52rkl.cn/shenjing/'
-    // // 'http://www.52rkl.cn/doumei/',
+    'http://mp.weixin.qq.com/profile?src=3&timestamp=1538107031&ver=1&signature=yP1t*DZflm8SG2qiqdLwSza3fufRftiGeXXyuKIh49SzA6RQ23kzSon4fdrnd76zI7nFTNxAOz7h1pG0yOaGfg==', // 新闻哥
 ]
 
 let second = 6000;
@@ -47,49 +34,11 @@ function startGetText() {
     urlList.forEach(url => {
         let _categoryId = "";
         let _categoryName = "";
-        if (url.match('m.sohu.com/media/117369')) {
-            _categoryName = '神吐槽'
+    
+        if(url.match('xinwenge')){
+            _categoryName = '新闻哥'
         }
-        if (url.match('news.ifeng.com/listpage/70664/1/list.shtml')) {
-            _categoryName = 'FUN来了'
-        }
-        if (url.match('tu.duowan.com/tag/5037.html')) {
-            _categoryName = '今日囧图'
-        }
-        if (url.match('/article/list/BD21K0DLwangning/')) {
-            _categoryName = '轻松一刻'
-        }
-
-
-        // if(url.match('qingsong')){
-        //     _categoryName = '轻松一刻'
-        // }
-        // if(url.match('xinwenge')){
-        //     _categoryName = '新闻哥'
-        // }
-        // if(url.match('neihantu')){
-        //     _categoryName = '内涵图'
-        // }
-
-        // if(url.match('/doumei')){
-        //     _categoryName = '逗妹吐槽'
-        // }
-        // if(url.match('/funlaile')){
-        //     _categoryName = 'FUN来了'
-        // }
-        // if(url.match('/huzhou')){
-        //     _categoryName = '狐诌冷笑话'
-        // }
-        // if(url.match('/jiongge')){
-        //     _categoryName = '囧哥说事'
-        // }
-        // if(url.match('/zhizhe')){
-        //     _categoryName = '智者贱志'
-        // }
-        // if(url.match('/shenjing')){
-        //     _categoryName = '我们都是深井冰 '
-        // }
-
+       
         if (!_categoryName) {
             return;
         }
@@ -285,63 +234,6 @@ function booksQuery(body, _categoryId, _categoryName) {
         })
     }
 
-
-    if (_categoryName == '轻松一刻') {
-        // console.log(body)
-        let string = ""
-        if (typeof body == 'string') {
-            if (body.includes('artiList(')) {
-                string = eval(body)
-            } else {
-                return
-            }
-        } else {
-            return
-        }
-        let newlyDom;
-
-        if (string.BD21K0DLwangning) {
-            newlyDom = string.BD21K0DLwangning[0]
-        } else {
-            return
-        }
-        // 获取最新列表数据
-        let url = newlyDom.url
-        let docid = string.docid;
-        let content = {
-            thumb: newlyDom.imgsrc
-        };
-        request(url, function (err, res, body) {
-            if (!err && res.statusCode == 200) {
-                $ = cheerio.load(body, { decodeEntities: false });
-                content.title = $('article h1.title').text()
-                if(content.title.indexOf('轻松一刻')>-1){
-                    let title = `轻松一刻[${moment(newlyDom.ptime).format('YYYY-MM-DD')}]` 
-                    content.title = content.title.replace('轻松一刻',title)
-                }
-                content.keywords = content.title
-                content.description = content.title
-                content.category = _categoryId;
-                content.createAt = new Date();
-              
-                content.content =$('article .content').html()
-
-                Content.findOne({ title: content.title }).then((isHasContent) => {
-                    if (!isHasContent) {
-                        (new Content(content)).save().then(content, err => {
-                            // console.log(err,'err')
-                            // console.log(content)
-                        });
-                    }
-                })
-            } else {
-                console.log(_categoryName + '采集错误  err:' + err)
-            }
-        })
-    }
-
-
-
     if (_categoryName == '新闻哥') {
         return;
         let bodyTojson = JSON.parse(body);
@@ -377,9 +269,6 @@ function booksQuery(body, _categoryId, _categoryName) {
             }
         })
     }
-
-
-
 
     // booksName = $('.btitle').find('h1').text(); //小说名称
     // $('.excerpts').find('.excerpt').each(function (i, e) { //获取章节UrlList
@@ -436,9 +325,7 @@ function getBody(list, _categoryId) {
 }
 
 
-function artiList(body) {
-    return body
-}
+
 
 
 
