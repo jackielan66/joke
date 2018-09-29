@@ -16,7 +16,8 @@ let urlList = [
     'http://news.ifeng.com/listpage/70664/1/list.shtml', // FUN来了_资讯频道_凤凰网
     'http://tu.duowan.com/tag/5037.html', // 今日囧图
     'https://3g.163.com/touch/reconstruct/article/list/BD21K0DLwangning/0-10.html', // 轻松一刻
-
+    'https://3g.163.com/touch/reconstruct/article/list/CQ9UDVKOwangning/0-10.html', // 胖编怪聊
+    'https://3g.163.com/touch/reconstruct/article/list/CQ9UJIJNwangning/0-10.html', // 曲一刀
     // 'http://www.52rkl.cn/qingsong/',
     // 'http://www.52rkl.cn/shentucao/',
     // 'http://www.52rkl.cn/funlaile/',
@@ -59,11 +60,14 @@ function startGetText() {
         if (url.match('/article/list/BD21K0DLwangning/')) {
             _categoryName = '轻松一刻'
         }
+        if (url.match('/article/list/CQ9UDVKOwangning/')) {
+            _categoryName = '胖编怪聊'
+        }
+        if (url.match('/article/list/CQ9UJIJNwangning/')) {
+            _categoryName = '曲一刀'
+        }
 
-
-        // if(url.match('qingsong')){
-        //     _categoryName = '轻松一刻'
-        // }
+  
         // if(url.match('xinwenge')){
         //     _categoryName = '新闻哥'
         // }
@@ -286,6 +290,115 @@ function booksQuery(body, _categoryId, _categoryName) {
     }
 
 
+
+    if (_categoryName == '曲一刀') {
+        // console.log(body)
+        let string = ""
+        if (typeof body == 'string') {
+            if (body.includes('artiList(')) {
+                string = eval(body)
+            } else {
+                return
+            }
+        } else {
+            return
+        }
+        let newlyDom;
+
+        if (string.CQ9UJIJNwangning) {
+            newlyDom = string.CQ9UJIJNwangning[0]
+        } else {
+            return
+        }
+        // 获取最新列表数据
+        let url = newlyDom.url
+        let docid = string.docid;
+        let content = {
+            thumb: newlyDom.imgsrc
+        };
+        request(url, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                $ = cheerio.load(body, { decodeEntities: false });
+                content.title = $('article h1.title').text()
+                // if(content.title.indexOf('轻松一刻')>-1){
+                //     let title = `轻松一刻[${moment(newlyDom.ptime).format('YYYY-MM-DD')}]` 
+                //     content.title = content.title.replace('轻松一刻',title)
+                // }
+                content.keywords = content.title
+                content.description = content.title
+                content.category = _categoryId;
+                content.createAt = new Date();
+              
+                content.content =$('article .content').html()
+
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
+
+    if (_categoryName == '胖编怪聊') {
+        // console.log(body)
+        let string = ""
+        if (typeof body == 'string') {
+            if (body.includes('artiList(')) {
+                string = eval(body)
+            } else {
+                return
+            }
+        } else {
+            return
+        }
+        let newlyDom;
+
+        if (string.CQ9UDVKOwangning) {
+            newlyDom = string.CQ9UDVKOwangning[0]
+        } else {
+            return
+        }
+        // 获取最新列表数据
+        let url = newlyDom.url
+        let docid = string.docid;
+        let content = {
+            thumb: newlyDom.imgsrc
+        };
+        request(url, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                $ = cheerio.load(body, { decodeEntities: false });
+                content.title = $('article h1.title').text()
+                // if(content.title.indexOf('轻松一刻')>-1){
+                //     let title = `轻松一刻[${moment(newlyDom.ptime).format('YYYY-MM-DD')}]` 
+                //     content.title = content.title.replace('轻松一刻',title)
+                // }
+                content.keywords = content.title
+                content.description = content.title
+                content.category = _categoryId;
+                content.createAt = new Date();
+              
+                content.content =$('article .content').html()
+
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
+    
     if (_categoryName == '轻松一刻') {
         // console.log(body)
         let string = ""
