@@ -15,6 +15,10 @@ let urlList = [
     'http://m.sohu.com/media/117369', // 搜狐神吐槽
     'http://news.ifeng.com/listpage/70664/1/list.shtml', // FUN来了_资讯频道_凤凰网
     'http://tu.duowan.com/tag/5037.html', // 今日囧图
+    'http://tu.duowan.com/m/tucao', // 吐槽囧图
+    'http://tu.duowan.com/m/bxgif', // 全球搞笑GIF
+
+
     'https://3g.163.com/touch/reconstruct/article/list/BD21K0DLwangning/0-10.html', // 轻松一刻
     'https://3g.163.com/touch/reconstruct/article/list/CQ9UDVKOwangning/0-10.html', // 胖编怪聊
     'https://3g.163.com/touch/reconstruct/article/list/CQ9UJIJNwangning/0-10.html', // 曲一刀
@@ -57,6 +61,14 @@ function startGetText() {
         if (url.match('tu.duowan.com/tag/5037.html')) {
             _categoryName = '今日囧图'
         }
+        if (url.match('tu.duowan.com/m/tucao')) {
+            _categoryName = '吐槽囧图'
+        }
+        if (url.match('tu.duowan.com/m/bxgif')) {
+            _categoryName = '全球搞笑GIF'
+        }
+        
+
         if (url.match('/article/list/BD21K0DLwangning/')) {
             _categoryName = '轻松一刻'
         }
@@ -234,6 +246,116 @@ function booksQuery(body, _categoryId, _categoryName) {
             }
         })
     }
+
+    if (_categoryName == '吐槽囧图') {
+        $ = cheerio.load(body, { decodeEntities: false });
+        let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
+        let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
+
+        let getUrl = $(newlyDom).children('a').attr('href');
+        let urlArr = []
+        let id = 0;
+        if (getUrl.indexOf('.htm') > -1) {
+            urlArr = getUrl.split('.htm')
+        } else {
+            return
+        }
+        if (urlArr.length > 0) {
+            let str = urlArr[0];
+            id = str.split('/')[str.split('/').length - 1]
+        } else {
+            return
+        }
+        url = url + id
+        let content = {
+            thumb: $(newlyDom).children('a').find('img').attr('src')
+        };
+        request(url, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                let requestJSON = JSON.parse(body)
+                content.title = requestJSON.gallery_title;
+                content.keywords = content.title
+                content.description = content.title
+                content.category = _categoryId;
+                content.createAt = new Date();
+
+                let contentHtml = "";
+                if (Array.isArray(requestJSON.picInfo)) {
+                    requestJSON.picInfo.forEach(v => {
+                        contentHtml += `<figure class="text-center"><img alt='${v.add_intro}' data-src='${v.source}' /><p class="text-center" >${v.add_intro}</p></figure>`
+                    })
+                }
+                content.content = contentHtml;
+
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
+
+    if (_categoryName == '全球搞笑GIF') {
+        $ = cheerio.load(body, { decodeEntities: false });
+        let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
+        let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
+
+        let getUrl = $(newlyDom).children('a').attr('href');
+        let urlArr = []
+        let id = 0;
+        if (getUrl.indexOf('.htm') > -1) {
+            urlArr = getUrl.split('.htm')
+        } else {
+            return
+        }
+        if (urlArr.length > 0) {
+            let str = urlArr[0];
+            id = str.split('/')[str.split('/').length - 1]
+        } else {
+            return
+        }
+        url = url + id
+        let content = {
+            thumb: $(newlyDom).children('a').find('img').attr('src')
+        };
+        request(url, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                let requestJSON = JSON.parse(body)
+                content.title = requestJSON.gallery_title;
+                content.keywords = content.title
+                content.description = content.title
+                content.category = _categoryId;
+                content.createAt = new Date();
+
+                let contentHtml = "";
+                if (Array.isArray(requestJSON.picInfo)) {
+                    requestJSON.picInfo.forEach(v => {
+                        contentHtml += `<figure class="text-center"><img alt='${v.add_intro}' data-src='${v.source}' /><p class="text-center" >${v.add_intro}</p></figure>`
+                    })
+                }
+                content.content = contentHtml;
+
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
+    
+
 
     if (_categoryName == '今日囧图') {
         $ = cheerio.load(body, { decodeEntities: false });
