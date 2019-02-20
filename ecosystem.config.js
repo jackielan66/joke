@@ -6,7 +6,7 @@ module.exports = {
         script: "./app.js",
         // 项目环境变量
         env: {
-            "NODE_ENV": "production",
+            "NODE_ENV": "prodution",
             "PORT": 80
         }
     }, {
