@@ -252,7 +252,7 @@ function booksQuery(body, _categoryId, _categoryName) {
         let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
         let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
 
-        let getUrl = $(newlyDom).children('a').attr('href');
+        let getUrl = $(newlyDom).children('a').attr('href') || "";
         let urlArr = []
         let id = 0;
         if (getUrl.indexOf('.htm') > -1) {
@@ -306,7 +306,7 @@ function booksQuery(body, _categoryId, _categoryName) {
         let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
         let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
 
-        let getUrl = $(newlyDom).children('a').attr('href');
+        let getUrl = $(newlyDom).children('a').attr('href') || "";
         let urlArr = []
         let id = 0;
         if (getUrl.indexOf('.htm') > -1) {
@@ -362,7 +362,7 @@ function booksQuery(body, _categoryId, _categoryName) {
         let newlyDom = $('#pic-list li').eq(1);         // 获取最新列表数据
         let url = 'http://tu.duowan.com/index.php?r=show/getByGallery/&gid='
 
-        let getUrl = $(newlyDom).children('a').attr('href');
+        let getUrl = $(newlyDom).children('a').attr('href') || "";
         let urlArr = []
         let id = 0;
         if (getUrl.indexOf('.htm') > -1) {

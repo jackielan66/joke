@@ -58,7 +58,16 @@ router.post("/logout",(req,res,next)=>{
     });
 });
 
-
+// 添加分类
+router.get("/category",(req,res,next)=>{
+    Category.find().then(category=>{
+        res.json({
+            code:200,
+            data:category,
+            message:"分类查询成功！"
+        })
+    })
+});
 
 // 添加分类
 router.post("/category/add",(req,res,next)=>{
