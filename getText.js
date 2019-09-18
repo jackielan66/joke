@@ -3,7 +3,9 @@ var router = express.Router();
 var Content = require("./models/Content.js");
 var Category = require("./models/Category.js");
 var _ = require('lodash');
-var moment = require('moment')
+var moment = require('moment');
+var fs = require('fs');
+var path = require('path');
 
 /*
 *  采集接口
@@ -31,6 +33,7 @@ let urlList = [
     // 'http://www.52rkl.cn/zhizhe/',
     // 'http://www.52rkl.cn/shenjing/'
     // // 'http://www.52rkl.cn/doumei/',
+    'https://www.qiushibaike.com/hot/', // 糗事百科
 ]
 
 let second = 6000;
@@ -52,12 +55,12 @@ function startGetText() {
     urlList.forEach(url => {
         let _categoryId = "";
         let _categoryName = "";
-        if (url.match('m.sohu.com/media/117369')) {
-            _categoryName = '神吐槽'
-        }
-        if (url.match('news.ifeng.com/listpage/70664/1/list.shtml')) {
-            _categoryName = 'FUN来了'
-        }
+        // if (url.match('m.sohu.com/media/117369')) {
+        //     _categoryName = '神吐槽'
+        // }
+        // if (url.match('news.ifeng.com/listpage/70664/1/list.shtml')) {
+        //     _categoryName = 'FUN来了'
+        // }
         if (url.match('tu.duowan.com/tag/5037.html')) {
             _categoryName = '今日囧图'
         }
@@ -78,6 +81,10 @@ function startGetText() {
         if (url.match('/article/list/CQ9UJIJNwangning/')) {
             _categoryName = '曲一刀'
         }
+        if (url.match('www.qiushibaike.com/hot/')) {
+            _categoryName = '糗事百科'
+        }
+
 
   
         // if(url.match('xinwenge')){
@@ -125,7 +132,10 @@ function startGetText() {
             }
             // step 2 获取url文件体
             request(url, function (err, res, body) {
-                if (!err && res.statusCode == 200) {
+                // console.log(err,'err');
+                // console.log(res,'res');
+                // console.log(body,'body');
+                if (!err && res &&  res.statusCode == 200) {
                     booksQuery(body, _categoryId, _categoryName)
                 } else {
                     console.log('err:' + err)
@@ -613,7 +623,48 @@ function booksQuery(body, _categoryId, _categoryName) {
         })
     }
 
-
+    if (_categoryName == '糗事百科') {
+        $ = cheerio.load(body, { decodeEntities: false });
+        let newlyDom = $('a[class="text"]');         // 获取最新列表数据
+        // console.log('$',newlyDom[0])
+        let url = $(body).find('a').html();         // 详情的具体url
+        console.log('$url',url)
+        let content = {
+            thumb: ''
+        };
+        // var w_data = new Buffer($('body').html());
+        // fs.writeFile(__dirname + '/test.html', w_data, {flag: 'a'}, function (err) {
+        //     if(err) {
+        //      console.error(err);
+        //      } else {
+        //         console.log('写入成功');
+        //      }
+        //  })
+        // console.log('url',url)
+        request('https://www.qiushibaike.com/' + url, function (err, res, body) {
+            $ = cheerio.load(body, { decodeEntities: false });
+            console.log($('#content').html(),'content$')
+            if (!err && res.statusCode == 200) {
+                content.title = $('#content .article-title').text();
+                content.keywords = $('#content .article-title').text();
+                content.description =$('#content .article-title').text();
+                content.category = _categoryId;
+                content.createAt = new Date();
+                content.content = $('#conten .content').html();
+                // console.log(content,'content')
+                Content.findOne({ title: content.title }).then((isHasContent) => {
+                    if (!isHasContent) {
+                        (new Content(content)).save().then(content, err => {
+                            // console.log(err,'err')
+                            // console.log(content)
+                        });
+                    }
+                })
+            } else {
+                console.log(_categoryName + '采集错误  err:' + err)
+            }
+        })
+    }
 
 
     // booksName = $('.btitle').find('h1').text(); //小说名称
