@@ -1,3 +1,6 @@
 #ignore pull file#
 /node_modules/
+# Ignore built ts files
+dist/**/*
+.vscode
 .idea
