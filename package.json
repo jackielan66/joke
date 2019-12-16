@@ -4,7 +4,7 @@
   "description": "a good joke name",
   "main": "index.js",
   "scripts": {
-    "build-test": "npm run build-ts && ",
+    "build-test": "npm run build-ts",
     "build": "npm run build-sass && npm run build-ts && npm run lint && npm run copy-static-assets",
     "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css",
     "build-ts": "tsc",

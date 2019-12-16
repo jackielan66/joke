@@ -1,41 +1,13 @@
-{%  extends 'layout.html' %}
-
-{%  block content %}
-    <div>
-        <ol class="breadcrumb">
-            <li><a href="/admin">管理首页</a></li>
-            <li><span>列表</span></li>
-        </ol>
-        <h3>用户列表</h3>
-        <table class="table table-hover">
-            <tr>
-                <th>ID</th>
-                <th>用户名</th>
-                <th>密码</th>
-                <th>是否是管理员</th>
-            </tr>
-            {% for user in users  %}
-                <tr>
-                    <td>{{user._id}}</td>
-                    <td>{{user.username}}</td>
-                    <td>{{user.password}}</td>
-                    <td>
-                    {% if user.isAdmin %}
-                    管理员
-                    {% else %}
-                        用户
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor%}
-        </table>
-        <nav aria-label="...">
-            <ul class="pager">
-                <li><a href="user?page={{page-1}}">上一页</a></li>
-                <li>当前一共有 {{totalPage}} 条数据</li>
-                <li><a href="user?page={{page-0+1}}">下一页</a></li>
-            </ul>
-        </nav>
-    </div>
-{% endblock %}
-
+<div class="col-sm-8 offset-sm-2">
+    <form method="POST">
+        <legend>Forgot Password</legend>
+        <hr><input type="hidden" name="_csrf">
+        <div class="form-group">
+            <p>Enter your email address below and we will send you password reset instructions.</p><label
+                class="col-form-label font-weight-bold" for="email">Email</label><input class="form-control"
+                type="email" name="email" id="email" placeholder="Email" autofocus="" required="">
+        </div>
+        <div class="form-group"><button class="btn btn-primary" type="submit"><i class="fa fa-key"></i>Reset
+                Password</button></div>
+    </form>
+</div>

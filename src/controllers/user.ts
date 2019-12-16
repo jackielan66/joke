@@ -27,9 +27,6 @@ export const getLogin = (req: Request, res: Response) => {
  * Sign in using email and password.
  */
 export const postLogin = (req: Request, res: Response, next: NextFunction) => {
-    console.log('req',req.params)
-    console.log('req',req.query)
-    console.log('req',req.body)
     check("email", "Email is not valid").isEmail();
     check("username", "用户名必填").isEmpty();
     check("password", "Password cannot be blank").isLength({min: 6});
@@ -43,12 +40,6 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
     }
 
 
-    req.flash("errors",'居然走这里，没天理');
-    return res.redirect("/login");
-    
-    console.log('test login')
-    return;
-
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
@@ -57,7 +48,9 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
-            req.flash("success", { msg: "Success! You are logged in." });
+            req.flash("success", { msg: "登录成功" });
+            console.log('user',user);
+            console.log('req.session.returnTo',req.session.returnTo);
             res.redirect(req.session.returnTo || "/");
         });
     })(req, res, next);
@@ -90,11 +83,11 @@ export const getSignup = (req: Request, res: Response) => {
  * Create a new local account.
  */
 export const postSignup = (req: Request, res: Response, next: NextFunction) => {
-    check("email", "Email is not valid").isEmail();
+    // check("email", "Email is not valid").isEmail();
     check("password", "Password must be at least 4 characters long").isLength({ min: 4 });
     check("confirmPassword", "Passwords do not match").equals(req.body.password);
     // eslint-disable-next-line @typescript-eslint/camelcase
-    sanitize("email").normalizeEmail({ gmail_remove_dots: false });
+    // sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
     const errors = validationResult(req);
 
@@ -105,13 +98,14 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
 
     const user = new User({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        email:req.body.username
     });
 
     User.findOne({ username: req.body.username }, (err, existingUser) => {
         if (err) { return next(err); }
         if (existingUser) {
-            req.flash("errors", { msg: "Account with that email address already exists." });
+            req.flash("errors", { msg: "用户已经存在" });
             return res.redirect("/signup");
         }
         user.save((err) => {
@@ -131,7 +125,7 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
  * Profile page.
  */
 export const getAccount = (req: Request, res: Response) => {
-    res.render("account/profile", {
+    res.render("uc/profile", {
         title: "Account Management"
     });
 };
@@ -323,8 +317,8 @@ export const getForgot = (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
         return res.redirect("/");
     }
-    res.render("account/forgot", {
-        title: "Forgot Password"
+    res.render("admin/forgot", {
+        title: "忘记密码"
     });
 };
 
@@ -352,10 +346,10 @@ export const postForgot = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         function setRandomToken(token: AuthToken, done: Function) {
-            User.findOne({ email: req.body.email }, (err, user: any) => {
+            User.findOne({ username: req.body.username }, (err, user: any) => {
                 if (err) { return done(err); }
                 if (!user) {
-                    req.flash("errors", { msg: "Account with that email address does not exist." });
+                    req.flash("errors", { msg: "账号不存在" });
                     return res.redirect("/forgot");
                 }
                 user.passwordResetToken = token;
@@ -366,26 +360,28 @@ export const postForgot = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         function sendForgotPasswordEmail(token: AuthToken, user: UserDocument, done: Function) {
-            const transporter = nodemailer.createTransport({
-                service: "SendGrid",
-                auth: {
-                    user: process.env.SENDGRID_USER,
-                    pass: process.env.SENDGRID_PASSWORD
-                }
-            });
-            const mailOptions = {
-                to: user.email,
-                from: "hackathon@starter.com",
-                subject: "Reset your password on Hackathon Starter",
-                text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-          Please click on the following link, or paste this into your browser to complete the process:\n\n
-          http://${req.headers.host}/reset/${token}\n\n
-          If you did not request this, please ignore this email and your password will remain unchanged.\n`
-            };
-            transporter.sendMail(mailOptions, (err) => {
-                req.flash("info", { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
-                done(err);
-            });
+            req.flash("info", { msg: `密码已经发送至${user.username}，请查收` });
+
+        //     const transporter = nodemailer.createTransport({
+        //         service: "SendGrid",
+        //         auth: {
+        //             user: process.env.SENDGRID_USER,
+        //             pass: process.env.SENDGRID_PASSWORD
+        //         }
+        //     });
+        //     const mailOptions = {
+        //         to: user.email,
+        //         from: "hackathon@starter.com",
+        //         subject: "Reset your password on Hackathon Starter",
+        //         text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+        //   Please click on the following link, or paste this into your browser to complete the process:\n\n
+        //   http://${req.headers.host}/reset/${token}\n\n
+        //   If you did not request this, please ignore this email and your password will remain unchanged.\n`
+        //     };
+        //     transporter.sendMail(mailOptions, (err) => {
+        //         req.flash("info", { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
+        //         done(err);
+        //     });
         }
     ], (err) => {
         if (err) { return next(err); }

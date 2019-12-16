@@ -1,3 +1,13 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
 #ignore pull file#
 /node_modules/
 # Ignore built ts files

@@ -24,18 +24,19 @@ passport.deserializeUser((id, done) => {
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-    User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+passport.use(new LocalStrategy({ usernameField: "username" }, (username, password, done) => {
+    User.findOne({ username: username}, (err, user: any) => {
         if (err) { return done(err); }
         if (!user) {
-            return done(undefined, false, { message: `Email ${email} not found.` });
+            return done(undefined, false, { message: `用户名 ${username} 不存在` });
         }
         user.comparePassword(password, (err: Error, isMatch: boolean) => {
             if (err) { return done(err); }
+
             if (isMatch) {
                 return done(undefined, user);
             }
-            return done(undefined, false, { message: "Invalid email or password." });
+            return done(undefined, false, { message: "无效用户名或密码" });
         });
     });
 }));
@@ -67,6 +68,7 @@ passport.use(new FacebookStrategy({
     profileFields: ["name", "email", "link", "locale", "timezone"],
     passReqToCallback: true
 }, (req: any, accessToken, refreshToken, profile, done) => {
+    console.log('走faceback 策略')
     if (req.user) {
         User.findOne({ facebook: profile.id }, (err, existingUser) => {
             if (err) { return done(err); }

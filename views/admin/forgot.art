@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}} 后台管理系统 </title>
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/public/js/jquery.min.js"></script>
+    <script src="/public/js/bootstrap.js"></script>
+    <script src="/public/js/markdown.js"></script>
+    <script>
+//         $(function () {
+//             const $loginForm = $("#loginForm");
+//             $loginForm.find("button").on("click",(event)=>{
+//                 event.preventDefault();
+//                 $.ajax({
+//                     url:"/api/login",
+//                     type:"post",
+//                     data:{
+//                         username:$loginForm.find("[name=username]").val(),
+//                         password:$loginForm.find("[name=password]").val()
+//                     },
+//                     success:(successData)=>{
+//                         if(successData.code == 200){
+// //                            alert(successData.message);
+//                             window.location.href="/admin"
+//                             return;
+//                         }
+//                         alert(successData.message);
+// //                        console.log(successData,"successData")
+//                     },
+//                     error:(error)=>{
+//                         alert(error)
+// //                        console.log(error,"error")
+//                     }
+
+//                 })
+//             })
+//         })
+    </script>
+</head>
+<body>
+    {{include '../partials/flash.art'}}
+<section class="container">
+    <div class="col-sm-8 offset-sm-2">
+    <form method="POST">
+        <legend>{{title}}</legend>
+        <hr><input type="hidden" name="_csrf">
+        <div class="form-group">
+            <p>请输入你的用户名</p><label
+                class="col-form-label font-weight-bold" for="username">用户名</label><input class="form-control"
+                type="text" name="username" id="username" placeholder="username" autofocus="" required="">
+        </div>
+        <div class="form-group"><button class="btn btn-primary" type="submit"><i class="fa fa-key"></i>重置密码</button></div>
+    </form>
+</div>
+</section>
+</body>
+</html>
