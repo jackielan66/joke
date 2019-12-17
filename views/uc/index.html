@@ -17,7 +17,37 @@
 
 <body>
     {{include './header.html'}}
-    fsaf saf
+    <section class="container mt-20">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="excerpts">
+                    {{ each contents}}
+                    <article class="excerpt">
+                        <a href="/content/{{ $value.id }}" class="focus">
+                            <img src="{{$value.thumb}}" class="thumb">
+                        </a>
+                        <h2>
+                            <a href="/content/{{ $value.id }}">{{$value.title}}</a>
+                        </h2>
+                        <time>{{$value.createAt}}</time>
+                        <a class="cat" href="/category/{{ $value.category.id }}/0">{{$value.category.name}}</a>
+                        <p class="note  hidden-xs">
+                            <a href="/content/{{ $value.id }}">
+                                {{$value.description}}
+                            </a>
+                        </p>
+                    </article>
+                    {{ /each }}
+                </div>
+            </div>
+            <aside class="col-lg-4">
+                {{ include "./aside.html" }}
+            </aside>
+        </div>
+        <footer>
+            {{ include "./footer.html" }}
+        </footer>
+    </section>
 </body>
 <script>
     start()

@@ -87,6 +87,13 @@ app.use((req, res, next) => {
     console.log(req.path, 'req.path');
     next();
 });
+// app.use((req,res,next)=>{
+//     Category.find({}).then(categorys => {
+//         // 全局栏目放到req中
+//         req.categorys = categorys;
+//     })
+//     next();
+// })
 app.use('/public', express_1.default.static(path_1.default.join(__dirname, "public"), { maxAge: 31557600000 }));
 /**
  * Primary app routes.
@@ -120,5 +127,11 @@ app.get("/auth/facebook", passport_1.default.authenticate("facebook", { scope: [
 app.get("/auth/facebook/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
     res.redirect(req.session.returnTo || "/");
 });
+app.get('/content/:id', homeController.detail);
+// app.get('*', (req, res)=> {
+//     res.status(404).render('404.html', {
+//         title: 'No Found'
+//     })
+// });
 exports.default = app;
 //# sourceMappingURL=app.js.map

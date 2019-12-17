@@ -1,9 +1,18 @@
-<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><img
-            src="https://gravatar.com/avatar/34be3c7c0655313619d9b91a7e6f1ee6?s=60&amp;d=retro"
-            alt="admin@qq.com"><span>admin@qq.com</span><i class="caret"></i></a>
-    <ul class="dropdown-menu">
-        <li class="nav-item"><a class="nav-link" href="/account">My Account</a></li>
-        <li class="dropdown-divider"></li>
-        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-    </ul>
-</li>
+<div>
+    <span class="go-top glyphicon glyphicon-upload" style="display: none"></span>
+</div>
+<script>
+    $('.go-top').on('click',()=>{
+        $('html,body').animate({scrollTop: 0}, 1000);
+    });
+    $(window).scroll((e)=>{
+//        console.log($(window).scrollTop(),"scrollTop");
+        let clientHeight = window.innerHeight || 0;
+        let scrollTop = $(window).scrollTop() || 0;
+        if(scrollTop>clientHeight){
+            $('.go-top').fadeIn();
+        }else{
+            $('.go-top').fadeOut();
+        }
+    })
+</script>

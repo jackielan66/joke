@@ -10,6 +10,8 @@ import mongoose from "mongoose";
 import passport from "passport";
 import bluebird from "bluebird";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
+import { Category } from './models/Category';
+
 
 const MongoStore = mongo(session);
 
@@ -86,6 +88,14 @@ app.use((req, res, next) => {
     next();
 });
 
+// app.use((req,res,next)=>{
+//     Category.find({}).then(categorys => {
+//         // 全局栏目放到req中
+//         req.categorys = categorys;
+//     })
+//     next();
+// })
+
 
 app.use('/public',
     express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
@@ -125,6 +135,14 @@ app.get("/auth/facebook", passport.authenticate("facebook", { scope: ["email", "
 app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
     res.redirect(req.session.returnTo || "/");
 });
+
+
+app.get('/content/:id',homeController.detail)
+// app.get('*', (req, res)=> {
+//     res.status(404).render('404.html', {
+//         title: 'No Found'
+//     })
+// });
 
 export default app;
 
