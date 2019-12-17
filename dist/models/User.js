@@ -7,7 +7,7 @@ const bcrypt_nodejs_1 = __importDefault(require("bcrypt-nodejs"));
 const crypto_1 = __importDefault(require("crypto"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const userSchema = new mongoose_1.default.Schema({
-    username: { type: String, unique: true },
+    username: String,
     email: String,
     password: String,
     passwordResetToken: String,

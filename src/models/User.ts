@@ -3,7 +3,7 @@ import crypto from "crypto";
 import mongoose from "mongoose";
 
 export type UserDocument = mongoose.Document & {
-    username:string,
+    username:String,
     email: string;
     password: string;
     passwordResetToken: string;
@@ -32,7 +32,7 @@ export interface AuthToken {
 }
 
 const userSchema = new mongoose.Schema({
-    username:{ type: String, unique: true },
+    username:String,
     email: String,
     password: String,
     passwordResetToken: String,

@@ -1,30 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>我要哈哈，轻松一刻</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="首页" />
+    <meta name="description" content="描述" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/main.css">
+    <script src="/public/js/jquery.min.js"></script>
+    <script src="/public/js/bootstrap.js"></script>
+</head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <div class="container"><a class="navbar-brand" href="/"><i class="fa fa-cube"></i>Project name</a><button
-                class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span
-                    class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse">
-                <div class="dropdown-divider"></div>
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/api">API Examples</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li class="nav-item dropdown active"><a class="nav-link dropdown-toggle" href="#"
-                            data-toggle="dropdown"><img
-                                src="https://gravatar.com/avatar/34be3c7c0655313619d9b91a7e6f1ee6?s=60&amp;d=retro"
-                                alt="admin@qq.com"><span>admin@qq.com</span><i class="caret"></i></a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link" href="/account">My Account</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {{include './header.html'}}
     <div class="container pl-sm-0 pr-sm-0 pl-lg-3 pr-lg-3">
         <div class="alert alert-success fade show"><button class="close" type="button" data-dismiss="alert"><i
                     class="fa fa-times-circle-o"></i></button>
@@ -37,34 +29,37 @@
         <form class="form-horizontal" action="/account/profile" method="POST"><input type="hidden" name="_csrf">
             <div class="form-group row justify-content-md-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold" for="email">Email</label>
-                <div class="col-sm-7"><input class="form-control" type="email" name="email" id="email"
-                        value="admin@qq.com"></div>
+                <div class="col-sm-7"><input class="form-control" type="text" name="email" id="email"
+                        value="{{user.email}}"></div>
             </div>
             <div class="form-group row justify-content-md-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold" for="name">Name</label>
-                <div class="col-sm-7"><input class="form-control" type="text" name="name" id="name"></div>
+                <div class="col-sm-7"><input class="form-control" type="text" name="name" id="name"
+                        value="{{user.profile.name}}"></div>
             </div>
             <div class="form-group row justify-content-md-center align-items-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold">Gender</label>
                 <div class="col-sm-7">
                     <div class="form-check form-check-inline"><input class="form-check-input" id="option-male"
-                            type="radio" name="gender" value="male" data-toggle="radio"><label class="form-check-label"
-                            for="option-male">Male</label></div>
+                            type="radio" name="gender" value="male" checked="{{user.profile.gender==='male'}}"
+                            data-toggle="radio"><label class="form-check-label" for="option-male">Male</label></div>
                     <div class="form-check form-check-inline"><input class="form-check-input" id="option-female"
-                            type="radio" name="gender" value="female" data-toggle="radio"><label
-                            class="form-check-label" for="option-female">Female</label></div>
+                            type="radio" name="gender" value="female" checked="{{user.profile.gender==='female'}}"
+                            data-toggle="radio"><label class="form-check-label" for="option-female">Female</label></div>
                     <div class="form-check form-check-inline"><input class="form-check-input" id="option-other"
-                            type="radio" name="gender" value="other" data-toggle="radio"><label class="form-check-label"
-                            for="option-other">Other</label></div>
+                            type="radio" name="gender" value="other" checked="{{user.profile.gender==='other'}}"
+                            data-toggle="radio"><label class="form-check-label" for="option-other">Other</label></div>
                 </div>
             </div>
             <div class="form-group row justify-content-md-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold" for="location">Location</label>
-                <div class="col-sm-7"><input class="form-control" type="text" name="location" id="location"></div>
+                <div class="col-sm-7"><input class="form-control" value="{{user.profile.location}}" type="text"
+                        name="location" id="location"></div>
             </div>
-            <div class="form-group row justify-content-md-center"><label
-                    class="col-sm-3 col-form-label text-right font-weight-bold" for="website">Website</label>
-                <div class="col-sm-7"><input class="form-control" type="text" name="website" id="website"></div>
+            <div class="form-group row justify-content-md-center">
+                <label class="col-sm-3 col-form-label text-right font-weight-bold" for="website">Website</label>
+                <div class="col-sm-7"><input class="form-control" type="text" name="website"
+                        value="{{user.profile.website}}" id="website"></div>
             </div>
             <div class="form-group row justify-content-md-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold">Gravatar</label>
@@ -74,14 +69,15 @@
             </div>
             <div class="form-group row justify-content-md-center">
                 <div class="col-sm-4"><button class="btn btn btn-primary" type="submit"><i
-                            class="fa fa-pencil"></i>Update Profile</button></div>
+                            class="fa fa-pencil"></i>更新个人资料</button></div>
             </div>
         </form>
         <div class="page-header">
             <h3>Change Password</h3>
             <hr>
         </div>
-        <form class="form-horizontal" action="/account/password" method="POST"><input type="hidden" name="_csrf">
+        <form class="form-horizontal" action="/account/password" method="POST">
+            <input type="hidden" name="_csrf">
             <div class="form-group row justify-content-md-center"><label
                     class="col-sm-3 col-form-label text-right font-weight-bold" for="password">New Password</label>
                 <div class="col-sm-7"><input class="form-control" type="password" name="password" id="password"></div>
@@ -93,8 +89,7 @@
                         id="confirmPassword"></div>
             </div>
             <div class="form-group row justify-content-md-center">
-                <div class="col-sm-4"><button class="btn btn-primary" type="submit"><i class="fa fa-lock"></i>Change
-                        Password</button></div>
+                <div class="col-sm-4"><button class="btn btn-primary" type="submit"><i class="fa fa-lock"></i>修改密码</button></div>
             </div>
         </form>
         <div class="page-header">
@@ -130,13 +125,8 @@
     <script src="/js/lib/bootstrap.min.js"></script>
     <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
     <script src="/js/main.js"></script>
-    <script>window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-        ga('create', 'UA-38177297-2', 'auto'); ga('send', 'pageview')</script>
-    <script src="https://www.google-analytics.com/analytics.js" async="" defer=""></script>
-    <div class="xl-chrome-ext-bar" id="xl_chrome_ext_{4DB361DE-01F7-4376-B494-639E489D19ED}" style="display: none;">
-        <div class="xl-chrome-ext-bar__logo"></div>
 
-        <a id="xl_chrome_ext_download" href="javascript:;" class="xl-chrome-ext-bar__option">下载视频</a>
-        <a id="xl_chrome_ext_close" href="javascript:;" class="xl-chrome-ext-bar__close"></a>
-    </div>
+
 </body>
+
+</html>
