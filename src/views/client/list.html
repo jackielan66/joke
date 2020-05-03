@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}列表</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="keywords" content="首页" />
+    <meta name="description" content="描述" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/public/main.css">
+    <script src="/public/js/jquery.min.js"></script>
+</head>
+
+<body>
+{{ include "./header.html" }}
+<section class="container mt-20" >
+    <ol class="breadcrumb">
+        当前位置：
+        <li><a href="/">我要哈哈一乐首页</a></li>
+        <li>{{title}}</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="excerpts">
+                {{ each lists content }}
+                <article class="excerpt">
+                    <a href="/content/{{ content.cid }}" class="focus"><img src="{{ content.thumb }}" class="thumb"></a>
+                    <h2><a href="/content/{{ content.cid }}">{{content.title}}</a></h2>
+                    <time>{{content.createAt}}</time><a class="cat" href="/category/{{ content.category.id }}/0">{{content.category.name}}</a>
+                    <p class="note hidden-xs ">
+                        <a href="/content/{{ content.cid }}">
+                           {{content.description}}
+                        </a>
+                    </p>
+                </article>
+                {{ /each}}
+                <nav>
+                    <ul class="pager">
+                        <li><a href="/category/{{_categoryId}}?page={{page-1}}">上一页</a></li>
+                        <li><a href="/category/{{_categoryId}}?page={{page-0+1}}">下一页</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <aside class="col-lg-4">
+            {{ include "./aside.html" }}
+        </aside>
+    </div>
+</section>
+<footer>
+    {{ include "./footer.html" }}
+</footer>
+</body>
+
+</html>
