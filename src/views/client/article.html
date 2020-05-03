@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{title}}</title>
+    <title>{{title}} - {{SITE_DOCMENT_TITLE}}</title>
     <meta name="keywords" content="{{content.keywords}}" />
     <meta name="description" content="{{content.description}}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
@@ -19,7 +19,7 @@
         <ol class="breadcrumb">
             当前位置：
             <li>
-                <a href="/">我要哈哈一乐首页</a>
+                <a href="/">{{SITE_DOCMENT_TITLE}}首页</a>
             </li>
             <li>
                 <a href="/category/{{content.category.cid}}/0"> {{content.category.name}} </a>
@@ -32,8 +32,8 @@
                     <article class="article-content panel">
                         <header class="article-header">
                             <h1 class="article-title">{{content.title}}</h1>
-                            <div class="article-meta">{{content.createAt }} |
-                                <a href="/category/{{content.category.id}}/0">
+                            <div class="article-meta">{{content.createAt|dateFormat }} |
+                                <a href="/category/{{content.category.cid}}/0">
                                 {{content.category.name}} </a> | 已围
                                 <span id="count">
                                     {{content.views}}</span>次
@@ -42,6 +42,13 @@
                         <div>
                             {{@ content.content }} 
                         </div>
+                        {{if content.tags}}      
+                          <div > 
+                              {{each content.tags tag}}
+                              <a class="label label-primary" href="/tag-{{ tag.cid }}-page-0">{{tag.name}}</a>
+                              {{/each}}
+                        </div>
+                       {{/if}}
                         {{if content.originalLink}}      
                           <div > <a  class="text-muted h6" rel="nofollow"  href="{{ content.originalLink }} " >原文链接</a></div>
                        {{/if}}

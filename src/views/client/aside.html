@@ -2,7 +2,25 @@
     <h4>本月热点内容</h4>
     <ul>
         {{each hotContents hotContent}}
-        <li><a href="/content/{{ hotContent.id }}">{{hotContent.title}}</a></li>
+        <li><a href="/content/{{ hotContent.cid }}">{{hotContent.title}}</a></li>
         {{/each}}
     </ul>
+</div>
+
+<div class="widget_posts">
+    <h4>网站说明</h4>
+    <div>
+        给你带来更多的笑声的网站
+    </div>
+</div>
+
+<div class="widget_posts">
+    <h4>热门标签</h4>
+
+ 
+        {{each tags tag index}}
+           
+        <a class="label label-primary" href="/tag-{{ tag.cid }}-page-0">{{tag.name}}</a>
+        {{/each}}
+    
 </div>

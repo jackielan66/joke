@@ -2,14 +2,14 @@
     <div class="container">
         <div class="row">
             <div class="logo col-sm-4 col-xs-12">
-                <a href="/" title="我爱热可乐，轻松一刻">
-                    <i class="fa"><img style="max-height: 50px" src="/public/images/logo.png" alt="我爱热可乐"></i>
+                <a href="/" title="{{SITE_DOCMENT_TITLE}}">
+                    <i class="fa"><img style="max-height: 50px" src="/public/images/logo.png" alt="{{SITE_DOCMENT_TITLE}}首页"></i>
                 </a>
             </div>
             <ul class="site-navbar site-nav2 col-sm-8 hidden-xs">
                 {{ each categories item    }}
                 <li>
-                    <a href="/category/{{item.cid}}/0">{{item.name}}</a>
+                    <a href="/category-{{item.cid}}-page-0">{{item.name}}</a>
                 </li>
                 {{/each}}
             </ul>

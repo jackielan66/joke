@@ -3,6 +3,7 @@
 */
 var Content = require("../../models/Content.js");
 var Category = require("../../models/Category.js");
+const Tag = require("../../models/Tag.js");
 var _ = require('lodash');
 const cheerio = require("cheerio");
 const request = require("request");
@@ -123,7 +124,25 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
                 }
                 Content.findOne(_condition).then((isHasContent) => {
                     if (!isHasContent) {
-                        new Content(content).save()
+                        // 随机插入两条tag
+
+                        Tag.count().exec(function (err, count) {
+                            // Get a random entry
+                            var random = Math.floor(Math.random() * count)
+                            // Again query all users but only fetch one offset by our random #
+                            Tag.findOne().skip(random).exec(
+                                function (err, result) {
+                                    // Tada! random user
+                                    console.log(result, "Tag=== ====")
+                                    if (result) {
+                                        content.tags = [result._id]
+                                    }
+                                    new Content(content).save()
+                                })
+                        })
+
+
+
                     }
                 })
             } else {

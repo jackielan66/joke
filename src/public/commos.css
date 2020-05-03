@@ -112,6 +112,9 @@ a {
     color: #444;
     text-decoration: none;
 }
+ul{
+    list-style: none;
+}
 
 
 
