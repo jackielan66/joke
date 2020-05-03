@@ -32,10 +32,7 @@ const contentSchema = new Schema({
     title: String,
     thumb: String,
     //介绍
-    description: {
-        type: String,
-        default: "输入的内容值"
-    },
+    description: String,
     content: String,
     docid: String,// 目前如果是网易类，有个文章唯一id，用来判断唯一性，避免重复采集
     originalLink: String,
