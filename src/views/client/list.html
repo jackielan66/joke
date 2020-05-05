@@ -40,11 +40,15 @@
                         </p>
                     </article>
                     {{ /each}}
-                    {{ if total > size*(page+1) }}
+                    {{ if total > size }}
                     <nav>
                         <ul class="pager">
-                            <li><a href="/category/{{_categoryId}}?page={{page-1}}">上一页</a></li>
-                            <li><a href="/category/{{_categoryId}}?page={{page-0+1}}">下一页</a></li>
+                            {{if page>0}}
+                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-1}}">上一页</a></li>
+                            {{/if}}
+                            {{ if total > size*(page+1) }}
+                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-0+1}}">下一页</a></li>
+                            {{ /if }}
                         </ul>
                     </nav>
                     {{/if}}

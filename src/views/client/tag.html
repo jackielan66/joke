@@ -20,7 +20,7 @@
         <ol class="breadcrumb">
             当前位置：
             <li><a href="/">{{SITE_DOCMENT_TITLE}}首页</a></li>
-            <li>{{title}}</li>
+            <li>{{title}} 标签列表</li>
         </ol>
 
         <div class="row">
@@ -31,7 +31,8 @@
                         <a href="/content/{{ content.cid }}" class="focus"><img src="{{ content.thumb }}"
                                 class="thumb"></a>
                         <h2><a href="/content/{{ content.cid }}">{{content.title}}</a></h2>
-                        <time>{{content.createAt|dateFormat}}</time><a class="cat"
+                        <time>{{content.createAt|dateFormat}}</time>
+                        <a class="cat"
                             href="/category/{{ content.category.id }}/0">{{content.category.name}}</a>
                         <p class="note hidden-xs ">
                             <a href="/content/{{ content.cid }}">
@@ -40,11 +41,15 @@
                         </p>
                     </article>
                     {{ /each}}
-                    {{ if total > size*(page+1) }}
+                    {{ if total > size }}
                     <nav>
                         <ul class="pager">
-                            <li><a href="/category/{{_categoryId}}?page={{page-1}}">上一页</a></li>
-                            <li><a href="/category/{{_categoryId}}?page={{page-0+1}}">下一页</a></li>
+                            {{if page>0}}
+                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-1}}">上一页</a></li>
+                            {{/if}}
+                            {{ if total > size*(page+1) }}
+                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-0+1}}">下一页</a></li>
+                            {{ /if }}
                         </ul>
                     </nav>
                     {{/if}}

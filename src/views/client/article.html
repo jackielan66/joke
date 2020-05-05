@@ -7,7 +7,8 @@
     <meta name="keywords" content="{{content.keywords}}" />
     <meta name="description" content="{{content.description}}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/public/main.css">
     <script src="/public/js/jquery.min.js"></script>
@@ -34,25 +35,36 @@
                             <h1 class="article-title">{{content.title}}</h1>
                             <div class="article-meta">{{content.createAt|dateFormat }} |
                                 <a href="/category/{{content.category.cid}}/0">
-                                {{content.category.name}} </a> | 已围
+                                    {{content.category.name}} </a> | 已围
                                 <span id="count">
                                     {{content.views}}</span>次
                             </div>
                         </header>
                         <div>
-                            {{@ content.content }} 
+                            {{@ content.content }}
                         </div>
-                        {{if content.tags}}      
-                          <div > 
-                              {{each content.tags tag}}
-                              <a class="label label-primary" href="/tag-{{ tag.cid }}-page-0">{{tag.name}}</a>
-                              {{/each}}
+                        {{if content.tags}}
+                        <div>
+                            {{each content.tags tag}}
+                            <a class="label label-primary" href="/tag-{{ tag.cid }}-page-0">{{tag.name}}</a>
+                            {{/each}}
                         </div>
-                       {{/if}}
-                        {{if content.originalLink}}      
-                          <div > <a  class="text-muted h6" rel="nofollow"  href="{{ content.originalLink }} " >原文链接</a></div>
-                       {{/if}}
-                 
+                        {{/if}}
+                        {{if content.originalLink}}
+                        <div> <a class="text-muted h6" rel="nofollow" href="{{ content.originalLink }} ">原文链接</a></div>
+                        {{/if}}
+                        <div>
+                            <nav>
+                                <ul class="pager">
+                                    {{if prev}}
+                                    <li>上一篇：<a href="/content/{{prev.cid}}">{{prev.title}}</a></li>
+                                    {{/if}}
+                                    {{ if next }}
+                                    <li>下一篇：<a href="/content/{{next.cid}}">{{next.title}}</a></li>
+                                    {{ /if }}
+                                </ul>
+                            </nav>
+                        </div>
                     </article>
                 </div>
             </div>

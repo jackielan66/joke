@@ -115,7 +115,6 @@ img,video{
 }
 
 .hot_posts ul, .widget_posts ul {
-    list-style: disc;
     color: #ccc;
 }
 .hot_posts li, .widget_posts li {

@@ -40,7 +40,7 @@ router.get("/category-:cid-page-:page", (req, res, next) => {
     if (page < 0) {
         page = 0;
     }
-    let size = req.query.size || 10;
+    let size = req.query.size || 5;
     let condition = { category: currentCategory._id };
     Content.count(condition).then(total => {
         Content.find(condition).sort({ _id: -1 }).skip(page * size).limit(size).populate(['category']).then(
@@ -48,19 +48,18 @@ router.get("/category-:cid-page-:page", (req, res, next) => {
                 // console.log(lists,'lists')
                 res.render("client/list.html", {
                     title: `${currentCategory.name}`,
+                    currentCategory,
                     lists,
                     page,
                     size,
                     total,
-                    // hotContents,
                     categories: res.categories,
                     hotContents: res.hotContents,
+                    tags: res.tags,
                     SITE_DOCMENT_TITLE
                 })
             }).catch(notFound => {
-                res.status(404).render('404.html', {
-                    title: 'No Found'
-                })
+                throw404(res);
             })
     })
 });
@@ -89,17 +88,15 @@ router.get("/tag-:cid-page-:page", (req, res, next) => {
                             page,
                             size,
                             total,
-                            // hotContents,
                             categories: res.categories,
                             hotContents: res.hotContents,
+                            tags: res.tags,
                             SITE_DOCMENT_TITLE
                         })
                     })
             })
         } else {
-            res.status(404).render('404.html', {
-                title: 'No Found'
-            })
+            throw404(res);
         }
     })
 
@@ -107,32 +104,39 @@ router.get("/tag-:cid-page-:page", (req, res, next) => {
 });
 
 // 前台显示某一篇具体文章
-router.get("/content/*", (req, res, next) => {
+router.get("/content/*", async (req, res, next) => {
     let _contentId = req.params['0'];
-    let _prevId = "";
-    let _nextId = "";
     let condition = { cid: _contentId };
-    Content.findOne(condition).populate(['category', 'tags']).then(content => {
-        if (content) {
-            Content.update(condition, { '$inc': { views: 1 } }).then();
-            res.render("client/article.html", {
-                content: content,
-                title: content.title,
-                categories: res.categories,
-                hotContents: res.hotContents,
-                SITE_DOCMENT_TITLE
-            });
-        }
-    }).catch(error => {
-        res.status(404).render('404.html', {
-            title: 'No Found'
-        })
-    })
+
+    try {
+        const content = await Content.findOne(condition).populate(['category', 'tags']);
+        
+        const prev = await Content.find({ '_id': { '$lt': content._id } }).sort({ _id: -1 }).limit(1);
+        const next = await Content.find({ '_id': { '$gt': content._id } }).sort({ _id: -1 }).limit(1);
+        Content.update(condition, { '$inc': { views: 1 } }).then();
+        res.render("client/article.html", {
+            content: content,
+            prev:prev.length>0?prev[0]:null,
+            next:next.length>0?next[0]:null,
+            title: content.title,
+            categories: res.categories,
+            hotContents: res.hotContents,
+            tags: res.tags,
+            SITE_DOCMENT_TITLE
+        });
+    } catch (error) {
+        throw404(res);
+    }
 });
 
 
 
-
+// 处理 404 页面
+function throw404(res) {
+    res.status(404).render('404.html', {
+        title: 'No Found'
+    })
+}
 
 
 
