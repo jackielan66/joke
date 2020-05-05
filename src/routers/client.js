@@ -8,17 +8,20 @@ var Content = require("../models/Content");
 var Tag = require("../models/Tag");
 var _ = require('lodash')
 
-const { SITE_DOCMENT_TITLE } = require("../config")
+const { SITE_DOCMENT_TITLE, SITE_KEYWORDS, SITE_DESCRIPTION, SITE_TTILE } = require("../config")
 
 // 渲染首页
 router.get('/', (req, res, next) => {
-    Content.find().limit(22).populate(['category']).then(contents => {
+    Content.find().limit(22).sort({ _id: -1 }).populate(['category']).then(contents => {
         res.render('client/index.html', {
             contents,
             SITE_DOCMENT_TITLE,
             categories: res.categories,
             hotContents: res.hotContents,
             tags: res.tags,
+            SITE_TTILE,
+            SITE_KEYWORDS,
+            SITE_DESCRIPTION
         });
     })
 });
@@ -74,10 +77,10 @@ router.get("/tag-:cid-page-:page", (req, res, next) => {
             }
             let size = req.query.size || 10;
             let contentCondition = {
-                tags:[tag._id]
+                tags: [tag._id]
             }
             Content.count(contentCondition).then(total => {
-                Content.find(contentCondition).sort({ _id: -1 }).skip(page * size).limit(size).populate(['category','tags']).then(
+                Content.find(contentCondition).sort({ _id: -1 }).skip(page * size).limit(size).populate(['category', 'tags']).then(
                     lists => {
                         // console.log(lists,'lists')
                         res.render("client/tag.html", {
@@ -100,7 +103,7 @@ router.get("/tag-:cid-page-:page", (req, res, next) => {
         }
     })
 
-   
+
 });
 
 // 前台显示某一篇具体文章
@@ -109,7 +112,7 @@ router.get("/content/*", (req, res, next) => {
     let _prevId = "";
     let _nextId = "";
     let condition = { cid: _contentId };
-    Content.findOne(condition).populate(['category','tags']).then(content => {
+    Content.findOne(condition).populate(['category', 'tags']).then(content => {
         if (content) {
             Content.update(condition, { '$inc': { views: 1 } }).then();
             res.render("client/article.html", {
