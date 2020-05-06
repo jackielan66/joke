@@ -109,12 +109,21 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
         };
         if (newsItem.source != categoryName) return; // 添加合法性，类目名称一样才开始采集，确认每个类型下都是同一个类型的网易新闻
 
-        request(newsItem.url, function (err, res, body) {
+        request(newsItem.url, async (err, res, body) => {
             if (!err && res.statusCode == 200) {
                 $ = cheerio.load(body, { decodeEntities: false });
                 content.title = $('article h1.title').text().trim();
-                content.keywords = content.title;
-                content.description = content.title;
+
+                // var titleMath = Math.floor(Math.random() * content.title.length );
+                // content.keywords = content.title.substring(titleMath, 72)
+
+                content.description = $('article .content').text().replace(/\s+/g, "");
+
+                // content.keywords = _.split(content.description,"",2);
+
+                if (content.description.length > 72) {
+                    content.description = content.description.substring(0, 72);
+                }
                 content.category = categoryId;
                 content.content = $('article .content').html();
                 content.originalLink = newsItem.url;
@@ -122,32 +131,30 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
                 let _condition = {
                     "$or": [{ title: content.title }, { docid: content.docid }]
                 }
-                Content.findOne(_condition).then((isHasContent) => {
+                try {
+                    let isHasContent = await Content.findOne(_condition);
                     if (!isHasContent) {
-                        // 随机插入两条tag
-
-                        Tag.count().exec(function (err, count) {
-                            // Get a random entry
-                            var random = Math.floor(Math.random() * count)
-                            // Again query all users but only fetch one offset by our random #
-                            Tag.findOne().skip(random).exec(
-                                function (err, result) {
-                                    // Tada! random user
-                                    console.log(result, "Tag=== ====")
-                                    if (result) {
-                                        content.tags = [result._id]
-                                    }
-                                    new Content(content).save()
-                                })
-                        })
-
-
-
+                        // // 随机插入两条tag
+                        let count = await Tag.count();
+                        var random = Math.floor(Math.random() * count);
+                        Tag.findOne().skip(random).exec(
+                            function (err, result) {
+                                // Tada! random user
+                                // console.log(result, "Tag=== ====")
+                                if (result) {
+                                    content.tags = [result._id]
+                                }
+                                new Content(content).save()
+                            });
                     }
-                })
+                } catch (error) {
+
+                }
+
             } else {
-                console.log(_categoryName + '采集错误  err:' + err)
+                console.log('采集错误  err:' + err)
             }
+
         })
     })
 }

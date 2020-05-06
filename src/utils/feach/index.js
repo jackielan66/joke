@@ -11,6 +11,7 @@ let second = 6000;
 if (process.env.NODE_ENV == 'prodution') {
     second = 6000 * 60 * 6
 }
+second = 6000 * 60 * 6;
 const startCollect = function () {
     startGetText();
     setInterval(() => {

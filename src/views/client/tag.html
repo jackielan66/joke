@@ -33,7 +33,7 @@
                         <h2><a href="/content/{{ content.cid }}">{{content.title}}</a></h2>
                         <time>{{content.createAt|dateFormat}}</time>
                         <a class="cat"
-                            href="/category/{{ content.category.id }}/0">{{content.category.name}}</a>
+                            href="/category-{{ content.category.cid }}-page-0">{{content.category.name}}</a>
                         <p class="note hidden-xs ">
                             <a href="/content/{{ content.cid }}">
                                 {{content.description}}
@@ -45,10 +45,10 @@
                     <nav>
                         <ul class="pager">
                             {{if page>0}}
-                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-1}}">上一页</a></li>
+                            <li><a href="/tag-{{currentTag.cid}}-page-{{page-1}}">上一页</a></li>
                             {{/if}}
                             {{ if total > size*(page+1) }}
-                            <li><a href="/category-{{currentCategory.cid}}-page-{{page-0+1}}">下一页</a></li>
+                            <li><a href="/tag-{{currentTag.cid}}-page-{{page-0+1}}">下一页</a></li>
                             {{ /if }}
                         </ul>
                     </nav>

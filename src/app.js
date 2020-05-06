@@ -66,7 +66,11 @@ app.use((req, res, next) => {
 // app.use('/api', require('./routers/api.js'));
 app.use('/', require('./routers/client.js'));
 app.use('/public', express.static(__dirname + '/public'));
-
+app.use('/*', (req, res, next)=>{
+    res.status(404).render('404.html', {
+        title: 'No Found'
+    })
+});
 
 // 监听数据库
 mongoose.connect('mongodb://localhost:27017/joke', function (err) {

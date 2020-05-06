@@ -8,17 +8,17 @@
 </div>
 
 <div class="widget_posts">
-    <h4>网站说明</h4>
     <div>
-        给你带来更多的笑声的网站
+        {{SITE_DOCMENT_TITLE}}，一个给大家带来快乐与笑声的网站，
+        网罗最新的轻松搞笑娱乐生活资讯,搜集了网易的每日轻松一刻、搜狐的神吐槽、凤凰网的fun来了、腾讯的新闻哥等等原创栏目内容。
+        每一期每一天,这里都可以看到!
+        让我们先疯吧
     </div>
 </div>
 
 <div class="widget_posts">
     <h4>热门标签</h4>
-
         {{each tags tag index}}
         <a class="label label-primary" href="/tag-{{ tag.cid }}-page-0">{{tag.name}}</a>
         {{/each}}
-    
 </div>

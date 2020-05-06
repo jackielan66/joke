@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{title}} - {{SITE_DOCMENT_TITLE}}</title>
+    <title>{{content.title}} - {{SITE_DOCMENT_TITLE}}</title>
     <meta name="keywords" content="{{content.keywords}}" />
     <meta name="description" content="{{content.description}}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
@@ -23,7 +23,7 @@
                 <a href="/">{{SITE_DOCMENT_TITLE}}首页</a>
             </li>
             <li>
-                <a href="/category/{{content.category.cid}}/0"> {{content.category.name}} </a>
+                <a href="/category-{{content.category.cid}}-page-0"> {{content.category.name}} </a>
             </li>
             <li>{{content.title}}</li>
         </ol>
@@ -34,7 +34,7 @@
                         <header class="article-header">
                             <h1 class="article-title">{{content.title}}</h1>
                             <div class="article-meta">{{content.createAt|dateFormat }} |
-                                <a href="/category/{{content.category.cid}}/0">
+                                <a href="/category-{{content.category.cid}}-page-0">
                                     {{content.category.name}} </a> | 已围
                                 <span id="count">
                                     {{content.views}}</span>次
@@ -55,12 +55,12 @@
                         {{/if}}
                         <div>
                             <nav>
-                                <ul class="pager">
+                                <ul class="pager article-pager">
                                     {{if prev}}
-                                    <li>上一篇：<a href="/content/{{prev.cid}}">{{prev.title}}</a></li>
+                                    <li class="text-left" >上一篇：<a href="/content/{{prev.cid}}">{{prev.title}}</a></li>
                                     {{/if}}
                                     {{ if next }}
-                                    <li>下一篇：<a href="/content/{{next.cid}}">{{next.title}}</a></li>
+                                    <li class="text-right">下一篇：<a href="/content/{{next.cid}}">{{next.title}}</a></li>
                                     {{ /if }}
                                 </ul>
                             </nav>
