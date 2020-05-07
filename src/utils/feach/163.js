@@ -8,6 +8,9 @@ var _ = require('lodash');
 const cheerio = require("cheerio");
 const request = require("request");
 
+const { getKeyWord } = require('../tool');
+
+
 /*
 *  采集接口
 * */
@@ -113,13 +116,10 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
             if (!err && res.statusCode == 200) {
                 $ = cheerio.load(body, { decodeEntities: false });
                 content.title = $('article h1.title').text().trim();
-
-                // var titleMath = Math.floor(Math.random() * content.title.length );
-                // content.keywords = content.title.substring(titleMath, 72)
-
                 content.description = $('article .content').text().replace(/\s+/g, "");
 
-                // content.keywords = _.split(content.description,"",2);
+                // 关键词是否有bug待定
+                content.keywords = getKeyWord(content.description, 2).join(',');
 
                 if (content.description.length > 72) {
                     content.description = content.description.substring(0, 72);
@@ -164,5 +164,8 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
 function artiList(body) {
     return body
 }
+
+
+
 
 exports.startGet_163_Text = startGet_163_Text
