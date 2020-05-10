@@ -119,7 +119,7 @@ function getEveryNews(arcList = [], categoryId, categoryName) {
                 content.description = $('article .content').text().replace(/\s+/g, "");
 
                 // 关键词是否有bug待定
-                content.keywords = getKeyWord(content.description, 2).join(',');
+                content.keywords = getKeyWord(content.title, 2).join(',');
 
                 if (content.description.length > 72) {
                     content.description = content.description.substring(0, 72);
