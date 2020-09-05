@@ -13,6 +13,7 @@ const { SITE_DOCMENT_TITLE, SITE_KEYWORDS, SITE_DESCRIPTION, SITE_TTILE } = requ
 // 渲染首页
 router.get('/', (req, res, next) => {
     Content.find().limit(22).sort({ _id: -1 }).populate(['category']).then(contents => {
+        // console.log(contents,'contents')
         res.render('client/index.html', {
             contents,
             SITE_DOCMENT_TITLE,

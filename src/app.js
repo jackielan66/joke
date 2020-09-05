@@ -1,7 +1,14 @@
 var express = require('express');
 var path = require("path");
 const moment = require("moment")
+require('dotenv').config({ 
+    path:path.resolve(process.cwd(), '.env.example')
+ })
 const { SITE_DOCMENT_TITLE } = require("./config")
+
+
+console.log(process.cwd(),"process.cwd()")  
+
 
 //创建app应用 。。等同nodejs中的http.createSever()
 var app = express();
@@ -38,10 +45,6 @@ app.use((req, res, next) => {
         res.categories = categories;
         next();
     })
-    // BiaoQingTags.find().limit(30).then(tags=>{
-    //     res.biaoqingtags = tags;
-    //     
-    // })
 })
 
 // 全局通用热门内容
@@ -72,10 +75,17 @@ app.use('/*', (req, res, next)=>{
     })
 });
 
+
+let MONGODB_URI =  process.env.MONGODB_URI_LOCAL;
+
+if(process.env.NODE_ENV=== 'production'){
+    MONGODB_URI =  process.env.MONGODB_URI;
+}
+console.log(MONGODB_URI,'===MONGODB_URI')
 // 监听数据库
-mongoose.connect('mongodb://localhost:27017/joke', function (err) {
+mongoose.connect(MONGODB_URI, function (err) {
     if (err) {
-        console.log("数据库连接失败");
+        console.log(err,"数据库连接失败");
     } else {
         app.listen(3001);
         console.log(`数据库连接成功，监听端口为 3001`);
